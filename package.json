@@ -1,0 +1,24 @@
+{
+  "name": "star-runner-lite",
+  "version": "0.0.1",
+  "description": "Juego de prueba en Kaboom con Node.js y Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EliasKmrgo/star-runner-lite.git"
+  },
+  "author": {
+    "name": "Elias Ronaldo, valeria Tocarruncho, Arian Selene, Wilson Niño"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EliasKmrgo/star-runner-lite/issues"
+  },
+  "homepage": "https://github.com/EliasKmrgo/star-runner-lite#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
