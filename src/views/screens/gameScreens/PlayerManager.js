@@ -7,7 +7,7 @@ export function createPlayer(k) {
         k.scale(4 / 6),
     ]);
 
-    // Animación: cambia sprite según si está saltando o en suelo
+    // Animación automática
     k.onUpdate(() => {
         if (!player.isGrounded()) {
             player.use(k.sprite("playerJump"));
@@ -16,12 +16,25 @@ export function createPlayer(k) {
         }
     });
 
-    // Controles
-    k.onKeyDown("right", () => player.move(120, 0));
-    k.onKeyDown("left", () => player.move(-120, 0));
-    k.onKeyPress("up", () => {
-        if (player.isGrounded()) player.jump(350);
-    });
+    // Funciones de movimiento (sin controles de teclado)
+    function moveLeft() {
+        player.move(-120, 0);
+    }
 
-    return player;
+    function moveRight() {
+        player.move(120, 0);
+    }
+
+    function jump() {
+        if (player.isGrounded()) {
+            player.jump(350);
+        }
+    }
+
+    return {
+        player,
+        moveLeft,
+        moveRight,
+        jump,
+    };
 }
