@@ -9,8 +9,8 @@ export class GameOverFacade {
 
     init() {
         this.gameOverUI.show(
-            () => { window.location.reload(); }, // puedes cambiar esto
-            // () => { window.location.reload(); },
+            () => { window.location.reload();}, // puedes cambiar esto
+           // () => { window.location.reload(); },
             async () => {
                 console.log("Copa presionado");
                 try {
@@ -28,13 +28,5 @@ export class GameOverFacade {
 
     setScores(scores) {
         this.scores = scores;
-    }
-    updateScoreboard(scores) {
-        console.log("📊 Scores actualizados:", scores);
-        // Aquí puedes renderizar los scores en pantalla (lista, tabla, etc.)
-    }
-
-    setPresenter(presenter) {
-        this.presenter = presenter;
     }
 }

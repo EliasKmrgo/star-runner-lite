@@ -1,7 +1,7 @@
 import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 import { StartFacade } from "./screens/startScreen/StartFacade.js";
 import { GameOverFacade } from "./screens/gameOverScreens/GameOverFacade.js";
-import { GamePresenter } from "./GamePresenter.js";
+
 
 const baseWidth = window.innerWidth;
 const baseHeight = window.innerHeight - (window.innerHeight * 0.6);
@@ -23,12 +23,5 @@ export function getPlayerName() {
     return facade.getPlayerName();
 }
 
-// ⏺ Crear presentador y pasarlo a la vista (GameOverFacade actuará como vista de scores)
 const gameOverFacade = new GameOverFacade(k);
-const presenter = new GamePresenter(gameOverFacade);
-
-// Cargar los scores al iniciar
-presenter.loadScores();
-
-// Pasar presentador a la vista
-gameOverFacade.setPresenter(presenter);
+gameOverFacade.setScores("scores.json");
