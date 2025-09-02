@@ -1,0 +1,59 @@
+@startumlStar Runner Lite
+
+package Models {
+  class Coins
+  class IScore
+  class FileScore
+  class Players
+  class ScoreService
+
+  FileScore --|> IScore
+}
+
+package Presenters {
+  class GamePresenter
+}
+
+package Views {
+  package gameOverScreens {
+    class GameOverFacade
+    class GameOverManager
+  }
+
+  package gameScreens {
+    class AssetsManager
+    class CollisionManager
+    class GameFacade
+    class MapManager
+    class PlayerManager
+    class SoundManager
+  }
+
+  package startScreen {
+    class StartFacade
+    class StartManager
+  }
+
+  class GameView
+}
+
+' Relaciones MVP
+GamePresenter --> Models
+GamePresenter --> Views
+
+' Vistas se apoyan en sus Facades/Managers
+GameView --> StartFacade
+StartFacade ---> GameFacade
+GameFacade ---> GameOverFacade
+' Dependencias internas
+GameFacade --> AssetsManager
+GameFacade --> CollisionManager
+GameFacade --> MapManager
+GameFacade --> PlayerManager
+GameFacade --> SoundManager
+
+StartFacade --> StartManager
+GameOverFacade --> GameOverManager
+
+@enduml
+
