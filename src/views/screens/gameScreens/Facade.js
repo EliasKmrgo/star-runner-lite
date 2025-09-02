@@ -13,6 +13,8 @@ export class GameFacade {
         this.k.scene("game", async () => {
             await this.startGame();
         });
+        k.scene("emptyScene", () => {
+        });
     }
 
     async startGame() {
@@ -41,17 +43,20 @@ export class GameFacade {
     }
 
     stopGame() {
-        if (this.musicInstance) this.musicInstance.stop();
+    // Detener música
+    if (this.musicInstance) this.musicInstance.stop();
 
-        this.k.pause();
-
-        if (this.currentPlayer) {
-            this.currentPlayer.destroy();
-            this.currentPlayer = null;
-        }
-
-        this.k.every((obj) => obj.destroy());
-
-        this.k.camPos(0, 0);
+    // Destruir jugador
+    if (this.player) {
+        this.player.destroy();
+        this.player = null;
     }
+
+    // Reset de cámara (opcional)
+    this.k.camPos(0, 0);
+
+    // Ir a la escena vacía
+    this.k.go("emptyScene");
+}
+
 }
