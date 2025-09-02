@@ -18,20 +18,25 @@ export class GameFacade {
     async startGame() {
         await loadAssets(this.k);                // cargar sprites y sonidos
         await loadMap(this.k);                   // cargar mapa
-        const player = createPlayer(this.k);     // crear jugador
+
+        const { player, moveLeft, moveRight, jump } = createPlayer(this.k);
+
         playMusic(this.k, "music", true, 0.4);   // música de fondo
         setupCollisions(this.k, player);         // colisiones
 
-        // cámara sigue al jugador
+        // Cámara sigue al jugador
         this.k.onUpdate(() => {
             this.k.camPos(player.pos);
         });
+
+        // Controles (definidos aquí, no en PlayerManager)
+        this.k.onKeyDown("right", moveRight);
+        this.k.onKeyDown("left", moveLeft);
+        this.k.onKeyPress("up", jump);
     }
 
     run() {
         this.initScenes();
         this.k.go("game");
     }
-
-
 }
