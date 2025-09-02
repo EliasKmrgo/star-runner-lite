@@ -1,5 +1,5 @@
 import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
-import { GameFacade } from "./screens/gameScreens/Facade.js";
+import { StartFacade } from "./screens/startScreen/StartFacade.js";
 
 const baseWidth = window.innerWidth;
 const baseHeight = window.innerHeight - (window.innerHeight * 0.6);
@@ -12,8 +12,7 @@ const k = kaboom({
     background: [92, 148, 252],
 });
 
-k.setGravity(900);
 
-// 👉 Aquí solo usamos la fachada
-const facade = new GameFacade(k);
-facade.run();
+k.setGravity(900);
+const facade = new StartFacade(k);
+facade.init();
