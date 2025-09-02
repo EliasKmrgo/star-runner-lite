@@ -1,5 +1,5 @@
 import { StartManager } from "./StartManager.js";
-import { GameFacade } from "../gameScreens/Facade.js";
+import { GameFacade } from "../gameScreens/GameFacade.js";
 
 export class StartFacade {
     constructor(k) {

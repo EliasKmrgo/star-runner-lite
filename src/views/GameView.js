@@ -1,5 +1,7 @@
 import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 import { StartFacade } from "./screens/startScreen/StartFacade.js";
+import { GameOverFacade } from "./screens/gameOverScreens/GameOverFacade.js";
+
 
 const baseWidth = window.innerWidth;
 const baseHeight = window.innerHeight - (window.innerHeight * 0.6);
@@ -16,3 +18,10 @@ const k = kaboom({
 k.setGravity(900);
 const facade = new StartFacade(k);
 facade.init();
+
+export function getPlayerName() {
+    return facade.getPlayerName();
+}
+
+const gameOverFacade = new GameOverFacade(k);
+gameOverFacade.setScores("scores.json");

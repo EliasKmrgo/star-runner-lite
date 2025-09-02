@@ -1,11 +1,12 @@
 import { playSound } from "./SoundManager.js";
+import { eventBus } from "./EventBus.js";
 
 export function setupCollisions(k, player) {
     k.onUpdate(() => {
-        // tiles peligrosos
+        // tiles peligrosos → jugador muere
         k.get("danger").forEach(tile => {
             if (player.isColliding(tile)) {
-                k.destroy(player);
+                eventBus.emit("playerDead");
             }
         });
 
@@ -15,6 +16,7 @@ export function setupCollisions(k, player) {
                 player.jump(380);
                 player.move(-1200, 0);
                 playSound(k, "hitSound");
+                eventBus.emit("playerHit");
             }
         });
 
@@ -23,6 +25,7 @@ export function setupCollisions(k, player) {
             if (player.isColliding(tile)) {
                 tile.destroy();
                 playSound(k, "coinSound");
+                eventBus.emit("coinCollected");
             }
         });
 
@@ -31,6 +34,7 @@ export function setupCollisions(k, player) {
             if (player.isColliding(tile)) {
                 tile.destroy();
                 playSound(k, "diamondSound");
+                eventBus.emit("diamondCollected");
             }
         });
     });
