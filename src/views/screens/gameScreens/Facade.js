@@ -39,4 +39,19 @@ export class GameFacade {
         this.initScenes();
         this.k.go("game");
     }
+
+    stopGame() {
+        if (this.musicInstance) this.musicInstance.stop();
+
+        this.k.pause();
+
+        if (this.currentPlayer) {
+            this.currentPlayer.destroy();
+            this.currentPlayer = null;
+        }
+
+        this.k.every((obj) => obj.destroy());
+
+        this.k.camPos(0, 0);
+    }
 }
