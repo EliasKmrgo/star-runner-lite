@@ -1,20 +1,24 @@
-class GamePresenter {
-  constructor(view, gameFacade, scoreService) {
-    this.view = view;
-    this.facade = gameFacade;
-    this.scores = scoreService;
-  }
+import { ScoreModel } from "./ScoreModel.js";
 
-  onGameOver(player, points) {
-    this.scores.addScore(player, points);
-    const topScores = this.scores.getTopScores();
-    this.view.showGameOver(points, topScores);
-  }
+export class GamePresenter {
+    constructor(view, filePath = "./scores.json") {
+        this.view = view;
+        this.model = new ScoreModel(filePath);
+    }
 
-  onRestart() {
-    this.facade.restart();
-    this.view.reset();
-  }
+    getScores() {
+        return this.model.getScores();
+    }
+
+    saveScore(playerName, score) {
+        this.model.addScore(playerName, score);
+        this.view.showScores(this.getScores());
+    }
+
+    updateScore(playerName, score) {
+        this.model.updateScore(playerName, score);
+        this.view.showScores(this.getScores());
+    }
 }
 
 
