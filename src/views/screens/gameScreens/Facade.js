@@ -6,9 +6,9 @@ import { playMusic } from "./SoundManager.js";
 import { eventBus } from "./EventBus.js";
 
 export class GameFacade {
-    constructor(k, gameOverFacade) {
+    constructor(k) {
         this.k = k;
-        this.gameOverFacade = gameOverFacade;
+        this.gameOverFacade = new GameOverFacade(k);
         this.player = null;
         this.musicInstance = null;
     }
@@ -45,7 +45,6 @@ export class GameFacade {
         // 📌 Suscribirse a eventos del EventBus
         eventBus.on("playerDead", () => {
             console.log("⚠ Jugador muerto");
-            // this.endGame();
         });
 
         eventBus.on("coinCollected", () => {
@@ -82,11 +81,4 @@ export class GameFacade {
         this.k.camPos(0, 0);
         this.k.go("emptyScene");
     }
-
-    // endGame() {
-    //     this.stopGame();
-    //     if (this.gameOverFacade) {
-    //         this.gameOverFacade.run(); // Ir a pantalla de Game Over
-    //     }
-    // }
 }
