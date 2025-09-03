@@ -38,34 +38,31 @@ export class GameFacade {
 
         setupCollisions(this.k, player);
 
-        // Cámara sigue al jugador
         this.k.onUpdate(() => {
             this.k.camPos(player.pos);
         });
 
-        // Controles
         this.k.onKeyDown("right", moveRight);
         this.k.onKeyDown("left", moveLeft);
         this.k.onKeyPress("up", jump);
 
-        // 📌 Suscribirse a eventos del EventBus
         eventBus.on("playerDead", () => {
-            console.log("⚠ Jugador muerto");
+            console.log("Jugador muerto");
             this.endGame();
         });
 
         eventBus.on("coinCollected", () => {
-            console.log("💰 Moneda recogida");
+            console.log("Moneda recogida");
             // aquí puedes sumar puntos
         });
 
         eventBus.on("diamondCollected", () => {
-            console.log("💎 Diamante recogido");
-            // aquí puedes sumar más puntos
+            console.log("Diamante recogido");
+            // aquí puedes sumar puntos
         });
 
         eventBus.on("playerHit", () => {
-            console.log("💥 Jugador golpeado");
+            console.log("Jugador golpeado");
         });
     }
 
@@ -86,12 +83,11 @@ export class GameFacade {
         }
 
         this.k.camPos(0, 0);
-        //this.k.go("emptyScene");
     }
 
-     endGame() {
-    this.stopGame();
-    this.k.go("gameOver");  // 👈 cambia de escena
-}
+    endGame() {
+        this.stopGame();
+        this.k.go("gameOver"); 
+    }
 
 }

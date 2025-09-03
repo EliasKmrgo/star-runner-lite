@@ -1,4 +1,3 @@
-// EventBus.js
 export class EventBus {
     constructor() {
         this.listeners = {};
@@ -24,5 +23,4 @@ export class EventBus {
     }
 }
 
-// Exportamos una única instancia global
 export const eventBus = new EventBus();

@@ -1,13 +1,12 @@
 export function createPlayer(k) {
     const player = k.add([
         k.sprite("playerImg"),
-        k.pos(50, 50),   // posición inicial
+        k.pos(50, 50),   
         k.area(),
         k.body(),
         k.scale(4 / 6),
     ]);
 
-    // Animación automática
     k.onUpdate(() => {
         if (!player.isGrounded()) {
             player.use(k.sprite("playerJump"));
@@ -16,7 +15,6 @@ export function createPlayer(k) {
         }
     });
 
-    // Funciones de movimiento (sin controles de teclado)
     function moveLeft() {
         player.move(-120, 0);
     }

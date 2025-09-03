@@ -9,15 +9,14 @@ export class GameOverFacade {
 
     init() {
         this.gameOverUI.show(
-            () => { window.location.reload();}, // puedes cambiar esto
-           // () => { window.location.reload(); },
+            () => { window.location.reload();},
             async () => {
                 console.log("Copa presionado");
                 try {
                     const response = await fetch(this.scores);
                     const scores = await response.json();
                     this.gameOverUI.showTop10(scores, () => {
-                        this.init(); // volver a la vista original
+                        this.init(); 
                     });
                 } catch (err) {
                     console.error("Error cargando JSON de top 10:", err);
