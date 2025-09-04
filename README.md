@@ -1,7 +1,13 @@
 # Star Runner Lite
 
-Proyecto académico en **JavaScript + Kaboom.js** que implementa un videojuego sencillo estilo plataforma.  
+Evaluación parcial en **JavaScript + Kaboom.js** que implementa un videojuego sencillo estilo plataforma.  
 Se desarrolló aplicando principios de diseño de software (**SOLID**) y patrones de diseño (**Adapter**, **Facade**).
+
+Presentada por los estudiantes:
+* Elias Camargo Ochoa
+* Arian Daza Ochoa
+* Alexander niño
+* Valeria Tocarruncho Mosquera
 
 ---
 
