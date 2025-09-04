@@ -4,10 +4,10 @@ Evaluación parcial en **JavaScript + Kaboom.js** que implementa un videojuego s
 Se desarrolló aplicando principios de diseño de software (**SOLID**) y patrones de diseño (**Adapter**, **Facade**).
 
 Presentada por los estudiantes:
-* Elias Camargo Ochoa
-* Arian Daza Ochoa
-* Alexander niño
-* Valeria Tocarruncho Mosquera
+* Elias Camargo Ochoa  
+* Arian Daza Ochoa  
+* Alexander Niño  
+* Valeria Tocarruncho Mosquera  
 
 ---
 
@@ -20,68 +20,71 @@ Presentada por los estudiantes:
    ```
 
 2. **Instalar dependencias**
-
    ```bash
    npm install
    ```
 
-3. **Ejecutar el servidor**
-
+3. **Ejecutar el servidor del juego (frontend)**
    ```bash
-   npm start
+   node index.js
    ```
+   El servidor se inicia en:  
+   [http://localhost:3000/views/Game.html](http://localhost:3000/views/Game.html)
 
-   El servidor inicia en [http://localhost:3000](http://localhost:3000).
+4. **Ejecutar el servidor de puntajes (backend)**
+   ```bash
+   cd server-runner-lite
+   node index.js
+   ```
+   El backend se inicia en:  
+   [http://localhost:3001](http://localhost:3001)
 
 ---
+
 ## Evidencia del conflicto resuelto
 
 Durante el desarrollo surgió un **conflicto de rutas** (`../Resources/` con mayúscula vs `src/resources/` en minúscula).  
-Esto generaba fallas al cargar mapas y sprites en entornos Linux (case-sensitive).
+Esto generaba fallas al cargar mapas y sprites en entornos Linux (case-sensitive).  
+La solución fue unificar las rutas con nombres en minúscula.
 
+---
 
 ## Patrones y principios aplicados
 
 ### Adapter
-
 Se utilizó en `MapManager.js` para adaptar los datos exportados desde **Tiled** (`Map.json`, `Tiles.tsx`) a objetos del motor **Kaboom**.  
 El adapter traduce propiedades del mapa (`solid`, `coin`, `danger`, etc.) a componentes y etiquetas de Kaboom (`k.area()`, `k.body()`, `"coin"`, `"danger"`).
 
 ### Facade
-
 Se aplicó en las clases:
-
 * `GameFacade`
 * `StartFacade`
 * `GameOverFacade`
 
 Estas encapsulan la lógica interna de cada pantalla y exponen métodos simples (`init()`, `run()`, `endGame()`).  
-Así el resto del sistema no necesita conocer los detalles de cada manager.
+De esta forma el resto del sistema no necesita conocer los detalles de cada manager.
 
-### SOLID
-
-* **S (Single Responsibility):** cada manager (`AssetsManager`, `MapManager`, `CollisionManager`, etc.) tiene una única responsabilidad.
-* **O (Open/Closed):** es fácil extender el juego (ej. añadir un nuevo tipo de objeto en el mapa) sin modificar el código existente.
-* **L (Liskov Substitution):** las vistas implementan contratos que podrían ser reemplazados por otras implementaciones sin romper el sistema.
-* **I (Interface Segregation):** se definieron interfaces claras (`IGameView`, `IGamePresenter`) que separan responsabilidades.
-* **D (Dependency Inversion):** los presenters no dependen directamente de Kaboom ni de la vista concreta, sino de interfaces (`IGameView`).
+### Principios SOLID
+* **S (Single Responsibility):** cada manager (`AssetsManager`, `MapManager`, `CollisionManager`, etc.) tiene una única responsabilidad.  
+* **O (Open/Closed):** es fácil extender el juego (por ejemplo, añadir un nuevo tipo de objeto en el mapa) sin modificar el código existente.  
+* **L (Liskov Substitution):** las vistas implementan contratos que pueden reemplazarse sin romper el sistema.  
+* **I (Interface Segregation):** se definieron interfaces claras (`IGameView`, `IGamePresenter`) que separan responsabilidades.  
+* **D (Dependency Inversion):** los presenters no dependen directamente de Kaboom ni de la vista concreta, sino de interfaces (`IGameView`).  
 
 ---
 
 ## Evidencia visual
 
-* Pantalla de inicio con ingreso de nombre.
-* Escenario generado con tiles de Tiled.
-* Jugador moviéndose y recogiendo monedas.
-* Pantalla de Game Over con opciones de reinicio y Top 10.
+* Pantalla de inicio con ingreso de nombre.  
+* Escenario generado con tiles diseñados en Tiled.  
+* Jugador moviéndose y recogiendo monedas.  
+* Pantalla de Game Over con opciones de reinicio y Top 10.  
 
 ---
 
 ## Estado del proyecto
 
-* Juego funcional con Kaboom.js.
-* Organización en capas (Views, Presenters, Models).
-* Aplicación de principios SOLID y patrones de diseño.
-* Conflicto de rutas resuelto y documentado.
-
----
+* Juego funcional con Kaboom.js.  
+* Organización en capas (Views, Presenters, Models).  
+* Aplicación de principios SOLID y patrones de diseño.  
+* Conflicto de rutas resuelto y documentado.  

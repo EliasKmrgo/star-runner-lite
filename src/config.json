@@ -1,0 +1,8 @@
+{
+  "apiBaseUrl": "",
+  "protocol": "http",
+  "host": "localhost",
+  "port": 3001,
+  "path": "/",
+  "top10Url": "http://localhost:3001/"
+}

@@ -12,30 +12,27 @@ export class StartFacade {
     }
 
     init() {
-        const { width, height, vec2 } = this.k;
-        const centerX = width() / 2;
-        const centerY = height() / 2;
+        const centerX = this.k.width() / 2;
+        const centerY = this.k.height() / 2;
 
-        const nameInput = this.ui.addInput(vec2(centerX - 100, centerY - 40));
+        const nombreInput = this.ui.addInput(this.k.vec2(centerX - 100, centerY - 40));
 
-        this.ui.addButton("Aceptar", vec2(centerX - 60, centerY + 20), () => {
-            this._handleAccept(nameInput);
+        this.ui.addButton("Aceptar", this.k.vec2(centerX - 60, centerY + 20), () => {
+            this.playerName = nombreInput.getValue();
+            console.log("Nombre del jugador: " + this.playerName);
+            try { localStorage.setItem("playerName", this.playerName || "Player"); } catch {}
+            this.facade.run();
         });
-    }
-
-    _handleAccept(input) {
-        this.playerName = input.getValue();
-
-        if (!this.playerName || this.playerName.trim() === "") {
-            console.warn("El nombre del jugador no puede estar vacío.");
-            return;
-        }
-
-        console.log(`Nombre del jugador: ${this.playerName}`);
-        this.facade.run();
     }
 
     getPlayerName() {
         return this.playerName;
+    }
+
+    // Permite configurar la ruta de Top10 usada por GameOver
+    setScoresPath(path) {
+        if (this.facade && this.facade.gameOverFacade && typeof this.facade.gameOverFacade.setScores === "function") {
+            this.facade.gameOverFacade.setScores(path);
+        }
     }
 }

@@ -3,12 +3,16 @@ import { eventBus } from "./EventBus.js";
 
 export function setupCollisions(k, player) {
     k.onUpdate(() => {
-        k.get("danger").forEach(tile => {
+        // tiles peligrosos => jugador muere (emitir una sola vez por frame)
+        const dangerTiles = k.get("danger");
+        for (const tile of dangerTiles) {
             if (player.isColliding(tile)) {
                 eventBus.emit("playerDead");
+                break;
             }
-        });
+        }
 
+        // tiles "hit"
         k.get("hit").forEach(tile => {
             if (player.isColliding(tile)) {
                 player.jump(380);
@@ -18,6 +22,7 @@ export function setupCollisions(k, player) {
             }
         });
 
+        // monedas
         k.get("coin").forEach(tile => {
             if (player.isColliding(tile)) {
                 tile.destroy();
@@ -26,6 +31,7 @@ export function setupCollisions(k, player) {
             }
         });
 
+        // diamantes
         k.get("diamond").forEach(tile => {
             if (player.isColliding(tile)) {
                 tile.destroy();
@@ -35,3 +41,4 @@ export function setupCollisions(k, player) {
         });
     });
 }
+

@@ -1,6 +1,5 @@
 import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 import { StartFacade } from "./screens/startScreen/StartFacade.js";
-import { GameOverFacade } from "./screens/gameOverScreens/GameOverFacade.js";
 
 
 const baseWidth = window.innerWidth;
@@ -23,5 +22,7 @@ export function getPlayerName() {
     return facade.getPlayerName();
 }
 
-const gameOverFacade = new GameOverFacade(k);
-gameOverFacade.setScores("scores.json");
+// Configurar ruta de Top10 para la instancia real usada en juego
+try {
+  facade.setScoresPath("scores.json");
+} catch {}
