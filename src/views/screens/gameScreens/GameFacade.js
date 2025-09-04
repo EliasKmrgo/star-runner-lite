@@ -6,10 +6,12 @@ import { playMusic } from "./SoundManager.js";
 import { eventBus } from "./EventBus.js";
 import { GameOverFacade } from "../gameOverScreens/GameOverFacade.js";
 import { ApiService } from "../../services/ApiService.js";
+import { InputAdapter } from "../../../adapters/InputAdapters.js";
 
 export class GameFacade {
-  constructor(k) {
+    constructor(k, inputAdapter) {
     this.k = k;
+    this.inputAdapter = inputAdapter;
     this.gameOverFacade = new GameOverFacade(k);
     this.player = null;
     this.musicInstance = null;
