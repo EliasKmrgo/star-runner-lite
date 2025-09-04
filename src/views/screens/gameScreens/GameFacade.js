@@ -5,10 +5,13 @@ import { setupCollisions } from "./CollisionManager.js";
 import { playMusic } from "./SoundManager.js";
 import { eventBus } from "./EventBus.js";
 import { GameOverFacade } from "../gameOverScreens/GameOverFacade.js";
+import { InputAdapter } from "../../../adapters/InputAdapters.js";
+
 
 export class GameFacade {
-    constructor(k) {
+    constructor(k, inputAdapter) {
         this.k = k;
+        this.inputAdapter = inputAdapter;
         this.gameOverFacade = new GameOverFacade(k);
         this.player = null;
         this.musicInstance = null;
@@ -42,9 +45,8 @@ export class GameFacade {
             this.k.camPos(player.pos);
         });
 
-        this.k.onKeyDown("right", moveRight);
-        this.k.onKeyDown("left", moveLeft);
-        this.k.onKeyPress("up", jump);
+        this.inputAdapter.actions = { moveLeft, moveRight, jump };
+        this.inputAdapter.setup();
 
         eventBus.on("playerDead", () => {
             console.log("Jugador muerto");

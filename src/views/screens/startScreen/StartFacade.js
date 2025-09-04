@@ -1,11 +1,13 @@
 import { StartManager } from "./StartManager.js";
 import { GameFacade } from "../gameScreens/GameFacade.js";
+import { KeyboardAdapter } from "../../../adapters/KeyboardAdapter.js";
 
 export class StartFacade {
     constructor(k) {
         this.k = k;
-        this.ui = new StartManager(k);
-        this.facade = new GameFacade(k);
+        this.ui = new StartManager(k); 
+        const keyboard = new KeyboardAdapter(k);
+        this.facade = new GameFacade(k, keyboard);
         this.playerName = "";
     }
 
