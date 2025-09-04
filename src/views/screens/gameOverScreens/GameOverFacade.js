@@ -1,3 +1,4 @@
+// GameOverFacade.js
 import { GameOverManager } from "./GameOverManager.js";
 import { ApiService } from "../../services/ApiService.js";
 
@@ -19,21 +20,33 @@ export class GameOverFacade {
             });
             return;
         }
+
+        // Mostrar pantalla Game Over
         this.gameOverUI.show(
-            () => {},
+            () => {
+                console.log("Volver presionado");
+                this.k.go("start"); // volver al menú principal
+            },
+            () => {
+                console.log("Reiniciar presionado");
+                this.k.go("game"); // reiniciar la partida
+            },
             async () => {
-                console.log("Copa presionado");
+                console.log("Top 10 presionado");
                 try {
-                    // Enviar último puntaje a endpoint configurable (si existe)
+                    // Enviar último puntaje
                     try {
                         const name = localStorage.getItem("playerName") || "Player";
                         const score = Number(localStorage.getItem("lastScore") || 0);
                         await this.sendScore(name, score);
-                    } catch {}
+                    } catch (e) {
+                        console.error("Error enviando puntaje:", e);
+                    }
 
+                    // Obtener top 10
                     const scores = await ApiService.fetchTop10(this.scores);
                     this.gameOverUI.showTop10(scores, () => {
-                        this.init();
+                        this.init(); // volver al menú de Game Over
                     });
                 } catch (err) {
                     console.error("Error cargando JSON de top 10:", err);
@@ -50,11 +63,11 @@ export class GameOverFacade {
         }
     }
 
-        setScores(scores) {
-            this.scores = scores;
-        }
+    setScores(scores) {
+        this.scores = scores;
+    }
 
-        setPrefetchedScores(scores) {
-            this.prefetchedScores = scores;
-        }
+    setPrefetchedScores(scores) {
+        this.prefetchedScores = scores;
+    }
 }

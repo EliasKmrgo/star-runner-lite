@@ -3,10 +3,10 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001; // por defecto 3001
 const DATA_FILE = path.join(__dirname, 'scores.json');
 
-// CORS básico
+// CORS básico (permite llamadas desde http://localhost:3000)
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -17,14 +17,15 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// Aceptar texto plano como fallback (p. ej. Postman mal configurado)
-app.use(express.text({ type: 'text/plain' }));
+app.use(express.text({ type: 'text/plain' })); // fallback si llega texto plano
 
+// Leer scores (devuelve objeto { playerName: score, ... })
 async function readScores() {
   try {
-    const data = await fs.readFile(DATA_FILE, 'utf8');
-    const json = JSON.parse(data);
-    return json && typeof json === 'object' && !Array.isArray(json) ? json : {};
+    const raw = await fs.readFile(DATA_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+    return {};
   } catch (err) {
     if (err.code === 'ENOENT') return {};
     throw err;
@@ -32,64 +33,100 @@ async function readScores() {
 }
 
 async function writeScores(scores) {
-  const json = JSON.stringify(scores, null, 2);
-  await fs.writeFile(DATA_FILE, json, 'utf8');
+  await fs.writeFile(DATA_FILE, JSON.stringify(scores, null, 2), 'utf8');
 }
 
-app.post('/', async (req, res) => {
-  try {
-    let payload = req.body;
-    console.log("POST / payload:", payload);
-
-    // Si llegó como texto, intentar parsear JSON y ser tolerante con falta de llaves
-    if (typeof payload === 'string') {
-      const raw = payload.trim();
-      try {
-        payload = JSON.parse(raw);
-      } catch (e1) {
-        if (!raw.startsWith('{') && !raw.endsWith('}')) {
-          try { payload = JSON.parse('{' + raw + '}'); } catch (e2) {}
-        }
+// Helper: intenta normalizar payloads (JSON string, texto, etc.)
+function normalizePayload(body) {
+  let payload = body;
+  if (typeof payload === 'string') {
+    const raw = payload.trim();
+    try {
+      payload = JSON.parse(raw);
+    } catch (e) {
+      // si no es JSON completo, intentar rodearlo con { } (tolerancia)
+      if (!raw.startsWith('{') && !raw.endsWith('}')) {
+        try { payload = JSON.parse('{' + raw + '}'); } catch (e2) { payload = {}; }
+      } else {
+        payload = {};
       }
     }
+  }
+  return payload || {};
+}
 
-    const { player } = payload || {};
-    let { score } = payload || {};
+// Handler que guarda el puntaje (compatible con varias formas de campo)
+async function handleScorePost(req, res) {
+  try {
+    let payload = normalizePayload(req.body);
+    console.log('POST payload:', payload);
 
-    // Aceptar score como string o número y normalizar
-    if (typeof score === 'string' && score.trim() !== '') {
-      score = Number(score);
-    }
+    // Acepta 'player' o 'name' (o variantes)
+    const name =
+      (payload.player || payload.name || payload.playerName || payload.player_name || '')
+        .toString()
+        .trim();
 
-    if (
-      typeof player !== 'string' || player.trim() === '' ||
-      typeof score !== 'number' || !Number.isFinite(score)
-    ) {
+    // score puede venir como string o number; normalizamos
+    let score = payload.score ?? payload.points ?? payload.value;
+    if (typeof score === 'string' && score.trim() !== '') score = Number(score);
+
+    if (!name || typeof score !== 'number' || !Number.isFinite(score)) {
       return res.status(400).json({
-        error: 'Formato inválido. Se requiere { player: string, score: number }'
+        error: 'Formato inválido. Se requiere { player | name: string, score: number }'
       });
     }
 
-    const name = player.trim();
     const scores = await readScores();
     const current = scores[name];
 
+    // Guardar solo si es nuevo o mayor que el actual
     if (typeof current !== 'number' || score > current) {
       scores[name] = score;
       await writeScores(scores);
     }
 
-    return res.status(200).json(scores);
+    // Responder con el top 10 (array) y el objeto completo por compatibilidad
+    const topArray = Object.entries(scores)
+      .map(([n, s]) => ({ name: n, score: s }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+
+    return res.json({ ok: true, top10: topArray, byName: scores });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Error del servidor' });
   }
+}
+
+// Rutas
+app.post('/score', handleScorePost); // endpoint recomendado
+app.post('/', handleScorePost);       // compatibilidad con tu versión previa
+
+// Obtener top 10 (array)
+app.get('/scores', async (_req, res) => {
+  try {
+    const scores = await readScores();
+    const topArray = Object.entries(scores)
+      .map(([n, s]) => ({ name: n, score: s }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    res.json(topArray);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
 });
 
+// Raíz (puede ser usada por frontend como top10Url)
 app.get('/', async (_req, res) => {
   try {
     const scores = await readScores();
-    res.json(scores);
+    const topArray = Object.entries(scores)
+      .map(([n, s]) => ({ name: n, score: s }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+    res.json(topArray);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error del servidor' });
